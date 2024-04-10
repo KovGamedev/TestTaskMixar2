@@ -9,6 +9,8 @@
     <div id="shipB">
       ShipB info
     </div>
+    <br>
+    <button id="start">Start battle</button>
 
     <script src="Ship.js"></script>
     <script src="Module.js"></script>
@@ -26,17 +28,30 @@
           `ShipA<br>
           Health: ${shipA.health}/${shipA.healthMax}<br>
           Shield: ${shipA.shield}/${shipA.shieldMax}<br>
-          ShieldRecovery: ${shipA.shieldRecovery} per second`
+          ShieldRecovery: ${shipA.shieldRecovery} per second<br>
+          WeaponSlots:<br>`
+        for (const weaponSlot of shipA.weaponSlots) {
+          elementShipA.innerHTML += `   ${weaponSlot}<br>`
+        }
 
         const elementShipB = document.getElementById("shipB")
         elementShipB.innerHTML = 
           `ShipB<br>
           Health: ${shipB.health}/${shipB.healthMax}<br>
           Shield: ${shipB.shield}/${shipB.shieldMax}<br>
-          ShieldRecovery: ${shipB.shieldRecovery} per second`
+          ShieldRecovery: ${shipB.shieldRecovery} per second<br>
+          WeaponSlots:<br>`
+        for (const weaponSlot of shipB.weaponSlots) {
+          elementShipB.innerHTML += `   ${weaponSlot}<br>`
+        }
       }
 
+      let wasBattleStarted = false
       function startBattle() {
+        if (wasBattleStarted)
+          return
+
+        wasBattleStarted = true
         const battleIntervalId = setInterval(() => {
           shipA.takeDamage(20)
           shipB.takeDamage(20)
@@ -45,9 +60,9 @@
             clearInterval(battleIntervalId)
         }, 1000)
       }
+      document.getElementById("start").addEventListener("click", startBattle)
 
       showInfo()
-      startBattle()
     </script>
   </body>
 </HTML>
