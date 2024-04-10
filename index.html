@@ -1,0 +1,53 @@
+<HTML>
+  <head>
+  </head>
+  <body>
+    <div id="shipA">
+      ShipA info
+    </div>
+    <br>
+    <div id="shipB">
+      ShipB info
+    </div>
+
+    <script src="Ship.js"></script>
+    <script src="Module.js"></script>
+    <script src="Weapon.js"></script>
+    <script>
+      const shipA = new Ship(100, 80, 1, 2, 2)
+      const shipB = new Ship(60, 120, 1, 2, 3)
+      console.log(shipA, shipB)
+      const module = new Module()
+      const weapon = new Weapon()
+
+      function showInfo() {
+        const elementShipA = document.getElementById("shipA")
+        elementShipA.innerHTML = 
+          `ShipA<br>
+          Health: ${shipA.health}/${shipA.healthMax}<br>
+          Shield: ${shipA.shield}/${shipA.shieldMax}<br>
+          ShieldRecovery: ${shipA.shieldRecovery} per second`
+
+        const elementShipB = document.getElementById("shipB")
+        elementShipB.innerHTML = 
+          `ShipB<br>
+          Health: ${shipB.health}/${shipB.healthMax}<br>
+          Shield: ${shipB.shield}/${shipB.shieldMax}<br>
+          ShieldRecovery: ${shipB.shieldRecovery} per second`
+      }
+
+      function startBattle() {
+        const battleIntervalId = setInterval(() => {
+          shipA.takeDamage(20)
+          shipB.takeDamage(20)
+          showInfo()
+          if (shipA.health <= 0 || shipB.health <= 0)
+            clearInterval(battleIntervalId)
+        }, 1000)
+      }
+
+      showInfo()
+      startBattle()
+    </script>
+  </body>
+</HTML>
