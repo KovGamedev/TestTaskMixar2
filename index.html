@@ -12,39 +12,22 @@
     <br>
     <button id="start">Start battle</button>
 
+    <script src="Properties.js"></script>
     <script src="Ship.js"></script>
     <script src="Module.js"></script>
     <script src="Weapon.js"></script>
+    <script src="ui.js"></script>
     <script>
       const shipA = new Ship(100, 80, 1, 2, 2)
       const shipB = new Ship(60, 120, 1, 2, 3)
-      console.log(shipA, shipB)
+      const modules = [
+        new Module(ModuleType.SUMMAND, { [Properties.SHIELD]: 50 }),
+        new Module(ModuleType.SUMMAND, { [Properties.HEALTH_MAX]: 50 }),
+        new Module(ModuleType.MULTIPLIER, { [Properties.RELOADING]: -0.2 }),
+        new Module(ModuleType.MULTIPLIER, { [Properties.SHIELD_RECOVERY]: 0.2 })
+      ]
       const module = new Module()
       const weapon = new Weapon()
-
-      function showInfo() {
-        const elementShipA = document.getElementById("shipA")
-        elementShipA.innerHTML = 
-          `ShipA<br>
-          Health: ${shipA.health}/${shipA.healthMax}<br>
-          Shield: ${shipA.shield}/${shipA.shieldMax}<br>
-          ShieldRecovery: ${shipA.shieldRecovery} per second<br>
-          WeaponSlots:<br>`
-        for (const weaponSlot of shipA.weaponSlots) {
-          elementShipA.innerHTML += `   ${weaponSlot}<br>`
-        }
-
-        const elementShipB = document.getElementById("shipB")
-        elementShipB.innerHTML = 
-          `ShipB<br>
-          Health: ${shipB.health}/${shipB.healthMax}<br>
-          Shield: ${shipB.shield}/${shipB.shieldMax}<br>
-          ShieldRecovery: ${shipB.shieldRecovery} per second<br>
-          WeaponSlots:<br>`
-        for (const weaponSlot of shipB.weaponSlots) {
-          elementShipB.innerHTML += `   ${weaponSlot}<br>`
-        }
-      }
 
       let wasBattleStarted = false
       function startBattle() {
@@ -55,14 +38,19 @@
         const battleIntervalId = setInterval(() => {
           shipA.takeDamage(20)
           shipB.takeDamage(20)
-          showInfo()
+          showInfo("shipA", shipA)
+          showInfo("shipB", shipB)
           if (shipA.health <= 0 || shipB.health <= 0)
             clearInterval(battleIntervalId)
         }, 1000)
       }
       document.getElementById("start").addEventListener("click", startBattle)
 
-      showInfo()
+      showInfo("shipA", shipA)
+      showInfo("shipB", shipB)
+
+      displayModules({ elementId: "shipA", ship: shipA, modules })
+      displayModules({ elementId: "shipB", ship: shipB, modules })
     </script>
   </body>
 </HTML>

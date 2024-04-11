@@ -1,0 +1,7 @@
+const Properties = Object.freeze({
+  HEALTH_MAX: `HEALTH_MAX`,
+  SHIELD: `SHIELD`,
+  SHIELD_RECOVERY: `SHIELD_RECOVERY`,
+  DAMAGE: `DAMAGE`,
+  RELOADING: `RELOADING`
+})

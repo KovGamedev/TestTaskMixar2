@@ -1,5 +1,24 @@
+const ModuleType = Object.freeze({
+  SUMMAND: `SUMMAND`,
+  MULTIPLIER: `MULTIPLIER`
+})
+
 class Module {
-  constructor() {
-    console.log('sdf module')
+  #properties = {}
+  #type
+
+  constructor(type = ModuleType.SUMMAND, properties = {}) {
+    this.#type = type
+    for (const property of Object.keys(properties)) {
+      this.#properties[property] = properties[property] || 0
+    }
+  }
+
+  get type() {
+    return this.#type
+  }
+
+  get properties() {
+    return { ...this.#properties }
   }
 }

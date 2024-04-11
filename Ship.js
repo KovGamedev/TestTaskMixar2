@@ -6,17 +6,17 @@ class Ship {
   #shieldRecovery
   #weaponSlotsQuantity
   #weaponSlots = []
-  #equipmentSlotsQuantity
-  #equipmentSlots = []
+  #moduleSlotsQuantity
+  #moduleSlots = []
 
-  constructor(healthMax, shieldMax, shieldRecovery, weaponSlothsQuantity, equipmentSlotsQuantity) {
+  constructor(healthMax, shieldMax, shieldRecovery, weaponSlothsQuantity, moduleSlotsQuantity) {
     this.#healthMax = healthMax
     this.#health = healthMax
     this.#shieldMax = shieldMax
     this.#shield = shieldMax
     this.#shieldRecovery = shieldRecovery
     this.#weaponSlotsQuantity = weaponSlothsQuantity
-    this.#equipmentSlotsQuantity = equipmentSlotsQuantity
+    this.#moduleSlotsQuantity = moduleSlotsQuantity
   }
 
   get healthMax() {
@@ -47,12 +47,12 @@ class Ship {
     return this.#weaponSlots
   }
 
-  get equipmentSlotsQuantity() {
-    return this.#equipmentSlotsQuantity
+  get moduleSlotsQuantity() {
+    return this.#moduleSlotsQuantity
   }
 
-  get equipmentSlots() {
-    return this.#equipmentSlots
+  get moduleSlots() {
+    return this.#moduleSlots
   }
 
   addWeapon(weapon) {
