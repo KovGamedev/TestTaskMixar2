@@ -3,11 +3,17 @@
   </head>
   <body>
     <div id="shipA">
-      ShipA info
+      <div class="shipId"></div>
+      <div class="HEALTH_MAX"></div>
+      <div class="SHIELD_MAX"></div>
+      <div class="SHIELD_RECOVERY"></div>
     </div>
     <br>
     <div id="shipB">
-      ShipB info
+      <div class="shipId"></div>
+      <div class="HEALTH_MAX"></div>
+      <div class="SHIELD_MAX"></div>
+      <div class="SHIELD_RECOVERY"></div>
     </div>
     <br>
     <button id="start">Start battle</button>
@@ -21,7 +27,7 @@
       const shipA = new Ship(100, 80, 1, 2, 2)
       const shipB = new Ship(60, 120, 1, 2, 3)
       const modules = [
-        new Module(ModuleType.SUMMAND, { [Properties.SHIELD]: 50 }),
+        new Module(ModuleType.SUMMAND, { [Properties.SHIELD_MAX]: 50 }),
         new Module(ModuleType.SUMMAND, { [Properties.HEALTH_MAX]: 50 }),
         new Module(ModuleType.MULTIPLIER, { [Properties.RELOADING]: -0.2 }),
         new Module(ModuleType.MULTIPLIER, { [Properties.SHIELD_RECOVERY]: 0.2 })
@@ -43,6 +49,11 @@
           if (shipA.health <= 0 || shipB.health <= 0)
             clearInterval(battleIntervalId)
         }, 1000)
+
+        var selects = document.getElementsByTagName("select");
+        for(var i = 0; i < selects.length; i++) {
+          selects[i].setAttribute("disabled", true)
+        }
       }
       document.getElementById("start").addEventListener("click", startBattle)
 

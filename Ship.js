@@ -1,26 +1,33 @@
 class Ship {
-  #healthMax
+  #properties = {
+    [Properties.HEALTH_MAX]: 0,
+    [Properties.SHIELD_MAX]: 0,
+    [Properties.SHIELD_RECOVERY]: 0
+  }
   #health
-  #shieldMax
   #shield
-  #shieldRecovery
   #weaponSlotsQuantity
   #weaponSlots = []
   #moduleSlotsQuantity
   #moduleSlots = []
 
   constructor(healthMax, shieldMax, shieldRecovery, weaponSlothsQuantity, moduleSlotsQuantity) {
-    this.#healthMax = healthMax
+    this.#properties[Properties.HEALTH_MAX] = healthMax
+    this.#properties[Properties.SHIELD_MAX] = shieldMax
+    this.#properties[Properties.SHIELD_RECOVERY] = shieldRecovery
+
     this.#health = healthMax
-    this.#shieldMax = shieldMax
     this.#shield = shieldMax
-    this.#shieldRecovery = shieldRecovery
     this.#weaponSlotsQuantity = weaponSlothsQuantity
     this.#moduleSlotsQuantity = moduleSlotsQuantity
   }
 
+  get properties() {
+    return { ...this.#properties }
+  }
+
   get healthMax() {
-    return this.#healthMax
+    return this.#properties[Properties.HEALTH_MAX]
   }
 
   get health() {
@@ -28,7 +35,7 @@ class Ship {
   }
 
   get shieldMax() {
-    return this.#shieldMax
+    return this.#properties[Properties.SHIELD_MAX]
   }
 
   get shield() {
@@ -36,7 +43,7 @@ class Ship {
   }
 
   get shieldRecovery() {
-    return this.#shieldRecovery
+    return this.#properties[Properties.SHIELD_RECOVERY]
   }
 
   get weaponSlothsQuantity() {
@@ -59,8 +66,39 @@ class Ship {
 
   }
 
-  addEquipment() {
+  appendEquipment(slotIndex, module) {
+    if (slotIndex < 0 || this.#moduleSlotsQuantity <= slotIndex) {
+      throw new Error(`Invalid slot index: ${slotIndex}`);
+    }
 
+    if (this.#moduleSlots[slotIndex])
+      this.#removeModule(slotIndex)
+    this.#addModule(slotIndex, module)
+  }
+
+  #removeModule(slotIndex) {
+    const { type: moduleType, properties: moduleProperties } = this.#moduleSlots[slotIndex]
+    for (const propertyKey of Object.keys(module)) {
+      if (moduleType === ModuleType.SUMMAND)
+        this.#properties[propertyKey] -= moduleProperties[propertyKey]
+      else
+        this.#properties[propertyKey] /= moduleProperties[propertyKey]
+    }
+    this.#health = this.#properties[Properties.HEALTH_MAX]
+    this.#shield = this.#properties[Properties.SHIELD_MAX]
+  }
+
+  #addModule(slotIndex, module) {
+    this.#moduleSlots[slotIndex] = module
+    const { type: moduleType, properties: moduleProperties } = module
+    for (const propertyKey of Object.keys(moduleProperties)) {
+      if (moduleType === ModuleType.SUMMAND)
+        this.#properties[propertyKey] += moduleProperties[propertyKey]
+      else
+        this.#properties[propertyKey] *= moduleProperties[propertyKey]
+    }
+    this.#health = this.#properties[Properties.HEALTH_MAX]
+    this.#shield = this.#properties[Properties.SHIELD_MAX]
   }
 
   takeDamage(damage) {
@@ -80,10 +118,10 @@ class Ship {
   }
 
   updatePerSecond() {
-    if (this.#shield < this.#shieldMax) {
-      this.#shield += this.#shieldRecovery
-      if (this.#shieldMax < this.#shield)
-        this.#shield = this.#shieldMax
+    if (this.#shield < this.shieldMax) {
+      this.#shield += this.shieldRecovery
+      if (this.shieldMax < this.#shield)
+        this.#shield = this.shieldMax
     }
   }
 }
