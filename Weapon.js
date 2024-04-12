@@ -1,6 +1,10 @@
+const WeaponType = Object.freeze({
+  EMPTY: `EMPTY`,
+  SUMMAND: `SUMMAND`
+})
+
 class Weapon extends Module {
-  constructor() {
-    super()
-    console.log('sdf weapon')
+  constructor(properties = {}) {
+    super(ModuleType.SUMMAND, properties)
   }
 }

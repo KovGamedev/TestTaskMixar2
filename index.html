@@ -7,6 +7,8 @@
       <div class="HEALTH_MAX"></div>
       <div class="SHIELD_MAX"></div>
       <div class="SHIELD_RECOVERY"></div>
+      <div class="DAMAGE"></div>
+      <div class="RELOADING"></div>
     </div>
     <br>
     <div id="shipB">
@@ -14,6 +16,8 @@
       <div class="HEALTH_MAX"></div>
       <div class="SHIELD_MAX"></div>
       <div class="SHIELD_RECOVERY"></div>
+      <div class="DAMAGE"></div>
+      <div class="RELOADING"></div>
     </div>
     <br>
     <button id="start">Start battle</button>
@@ -32,8 +36,11 @@
         new Module(ModuleType.MULTIPLIER, { [Properties.RELOADING]: 0.8 }),
         new Module(ModuleType.MULTIPLIER, { [Properties.SHIELD_RECOVERY]: 1.2 })
       ]
-      const module = new Module()
-      const weapon = new Weapon()
+      const weapon = [
+        new Weapon({ [Properties.DAMAGE]: 3, [Properties.RELOADING]: 5 }),
+        new Weapon({ [Properties.DAMAGE]: 2, [Properties.RELOADING]: 4 }),
+        new Weapon({ [Properties.DAMAGE]: 5, [Properties.RELOADING]: 20 }),
+      ]
 
       let wasBattleStarted = false
       function startBattle() {
@@ -62,6 +69,9 @@
 
       displayModules({ elementId: "shipA", ship: shipA, modules })
       displayModules({ elementId: "shipB", ship: shipB, modules })
+
+      displayWeapon({ elementId: "shipA", ship: shipA, weapon })
+      displayWeapon({ elementId: "shipB", ship: shipB, weapon })
     </script>
   </body>
 </HTML>

@@ -2,7 +2,9 @@ class Ship {
   #properties = {
     [Properties.HEALTH_MAX]: 0,
     [Properties.SHIELD_MAX]: 0,
-    [Properties.SHIELD_RECOVERY]: 0
+    [Properties.SHIELD_RECOVERY]: 0,
+    [Properties.DAMAGE]: 0,
+    [Properties.RELOADING]: 0
   }
   #health
   #shield
@@ -46,6 +48,14 @@ class Ship {
     return this.#properties[Properties.SHIELD_RECOVERY]
   }
 
+  get damage() {
+    return this.#properties[Properties.DAMAGE]
+  }
+
+  get reloading() {
+    return this.#properties[Properties.RELOADING]
+  }
+
   get weaponSlothsQuantity() {
     return this.#weaponSlotsQuantity
   }
@@ -62,23 +72,29 @@ class Ship {
     return this.#moduleSlots
   }
 
-  addWeapon(weapon) {
-
+  appendWeapon(slotIndex, weapon) {
+    if (slotIndex < 0 || this.#weaponSlotsQuantity <= slotIndex) {
+      throw new Error(`Invalid weapon slot index: ${slotIndex}`);
+    }
+    if (this.#weaponSlots[slotIndex])
+      this.#removeModule(slotIndex, this.#weaponSlots)
+    if (weapon.type !== ModuleType.EMPTY)
+      this.#addModule(slotIndex, weapon, this.#weaponSlots)
   }
 
   appendEquipment(slotIndex, module) {
     if (slotIndex < 0 || this.#moduleSlotsQuantity <= slotIndex) {
-      throw new Error(`Invalid slot index: ${slotIndex}`);
+      throw new Error(`Invalid module slot index: ${slotIndex}`);
     }
 
     if (this.#moduleSlots[slotIndex])
-      this.#removeModule(slotIndex)
+      this.#removeModule(slotIndex, this.#moduleSlots)
     if (module.type !== ModuleType.EMPTY)
-      this.#addModule(slotIndex, module)
+      this.#addModule(slotIndex, module, this.#moduleSlots)
   }
 
-  #removeModule(slotIndex) {
-    const { type: moduleType, properties: moduleProperties } = this.#moduleSlots[slotIndex]
+  #removeModule(slotIndex, moduleSlots) {
+    const { type: moduleType, properties: moduleProperties } = moduleSlots[slotIndex]
     for (const propertyKey of Object.keys(moduleProperties)) {
       if (moduleType === ModuleType.SUMMAND) {
         this.#properties[propertyKey] -= moduleProperties[propertyKey]
@@ -86,13 +102,13 @@ class Ship {
       else
         this.#properties[propertyKey] /= moduleProperties[propertyKey]
     }
-    this.#moduleSlots[slotIndex] = null
+    moduleSlots[slotIndex] = null
     this.#health = this.#properties[Properties.HEALTH_MAX]
     this.#shield = this.#properties[Properties.SHIELD_MAX]
   }
 
-  #addModule(slotIndex, module) {
-    this.#moduleSlots[slotIndex] = module
+  #addModule(slotIndex, module, moduleSlots) {
+    moduleSlots[slotIndex] = module
     const { type: moduleType, properties: moduleProperties } = module
     for (const propertyKey of Object.keys(moduleProperties)) {
       if (moduleType === ModuleType.SUMMAND)

@@ -4,11 +4,15 @@ function showInfo(elementId, ship) {
   elementShip.getElementsByClassName("HEALTH_MAX")[0].innerHTML = `Health: ${ship.health}/${ship.healthMax}`
   elementShip.getElementsByClassName("SHIELD_MAX")[0].innerHTML = `Shield: ${ship.shield}/${ship.shieldMax}`
   elementShip.getElementsByClassName("SHIELD_RECOVERY")[0].innerHTML = `ShieldRecovery: ${ship.shieldRecovery} per second`
+  elementShip.getElementsByClassName("DAMAGE")[0].innerHTML = `Damage: ${ship.damage}`
+  elementShip.getElementsByClassName("RELOADING")[0].innerHTML = `Weapon reloading: ${ship.reloading} seconds`
 }
 
 function displayModules({ elementId, ship, modules }) {
   const htmlElement = document.getElementById(elementId)
-  htmlElement.innerHTML += "Modules: "
+  const label = document.createElement("div")
+  label.innerHTML += "Modules: "
+  htmlElement.appendChild(label)
 
   const callback = (event, slotIndex) => {
     const module = JSON.parse(event.target.value)
@@ -21,6 +25,29 @@ function displayModules({ elementId, ship, modules }) {
       callback(event, i)
     }))
   }
+
+  htmlElement.appendChild(document.createElement("br"))
+}
+
+function displayWeapon({ elementId, ship, weapon }) {
+  const htmlElement = document.getElementById(elementId)
+  const label = document.createElement("div")
+  label.innerHTML += "Weapon: "
+  htmlElement.appendChild(label)
+
+  const callback = (event, slotIndex) => {
+    const oneWeapon = JSON.parse(event.target.value)
+    ship.appendWeapon(slotIndex, oneWeapon)
+    showInfo(elementId, ship)
+  }
+
+  for (let i = 0; i < ship.moduleSlotsQuantity; i++) {
+    htmlElement.appendChild(createModule(weapon, (event) => {
+      callback(event, i)
+    }))
+  }
+
+  htmlElement.appendChild(document.createElement("br"))
 }
 
 function createModule(modules, callback) {
@@ -36,7 +63,7 @@ function createModule(modules, callback) {
     const option = document.createElement("option")
     const { type, properties } = module
     for (const propertyKey of Object.keys(properties)) {
-      option.innerHTML += `${propertyKey}: ${properties[propertyKey]}`
+      option.innerHTML += `${propertyKey}: ${properties[propertyKey]} `
       option.setAttribute("value", JSON.stringify({ type, properties }))
     }
     select.appendChild(option)

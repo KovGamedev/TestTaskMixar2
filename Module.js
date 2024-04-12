@@ -5,21 +5,21 @@ const ModuleType = Object.freeze({
 })
 
 class Module {
-  #properties = {}
-  #type
+  _properties = {}
+  _type
 
   constructor(type = ModuleType.SUMMAND, properties = {}) {
-    this.#type = type
+    this._type = type
     for (const property of Object.keys(properties)) {
-      this.#properties[property] = properties[property] || 0
+      this._properties[property] = properties[property] || 0
     }
   }
 
   get type() {
-    return this.#type
+    return this._type
   }
 
   get properties() {
-    return { ...this.#properties }
+    return { ...this._properties }
   }
 }
