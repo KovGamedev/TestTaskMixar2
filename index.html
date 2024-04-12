@@ -7,7 +7,6 @@
       <div class="HEALTH_MAX"></div>
       <div class="SHIELD_MAX"></div>
       <div class="SHIELD_RECOVERY"></div>
-      <div class="DAMAGE"></div>
       <div class="RELOADING"></div>
     </div>
     <br>
@@ -16,7 +15,6 @@
       <div class="HEALTH_MAX"></div>
       <div class="SHIELD_MAX"></div>
       <div class="SHIELD_RECOVERY"></div>
-      <div class="DAMAGE"></div>
       <div class="RELOADING"></div>
     </div>
     <br>
@@ -43,7 +41,7 @@
       ]
 
       let wasBattleStarted = false
-      function startBattle() {
+      function startBattle(event) {
         if (wasBattleStarted)
           return
 
@@ -61,6 +59,8 @@
         for(var i = 0; i < selects.length; i++) {
           selects[i].setAttribute("disabled", true)
         }
+
+        event.target.setAttribute("disabled", true)
       }
       document.getElementById("start").addEventListener("click", startBattle)
 

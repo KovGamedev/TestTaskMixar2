@@ -4,8 +4,7 @@ function showInfo(elementId, ship) {
   elementShip.getElementsByClassName("HEALTH_MAX")[0].innerHTML = `Health: ${ship.health}/${ship.healthMax}`
   elementShip.getElementsByClassName("SHIELD_MAX")[0].innerHTML = `Shield: ${ship.shield}/${ship.shieldMax}`
   elementShip.getElementsByClassName("SHIELD_RECOVERY")[0].innerHTML = `ShieldRecovery: ${ship.shieldRecovery} per second`
-  elementShip.getElementsByClassName("DAMAGE")[0].innerHTML = `Damage: ${ship.damage}`
-  elementShip.getElementsByClassName("RELOADING")[0].innerHTML = `Weapon reloading: ${ship.reloading} seconds`
+  elementShip.getElementsByClassName("RELOADING")[0].innerHTML = `Reloading: ${100 * ship.reloading}% of base time`
 }
 
 function displayModules({ elementId, ship, modules }) {
@@ -16,7 +15,7 @@ function displayModules({ elementId, ship, modules }) {
 
   const callback = (event, slotIndex) => {
     const module = JSON.parse(event.target.value)
-    ship.appendEquipment(slotIndex, module)
+    ship.appendModule(slotIndex, module)
     showInfo(elementId, ship)
   }
 

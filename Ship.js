@@ -3,8 +3,7 @@ class Ship {
     [Properties.HEALTH_MAX]: 0,
     [Properties.SHIELD_MAX]: 0,
     [Properties.SHIELD_RECOVERY]: 0,
-    [Properties.DAMAGE]: 0,
-    [Properties.RELOADING]: 0
+    [Properties.RELOADING]: 1
   }
   #health
   #shield
@@ -48,10 +47,6 @@ class Ship {
     return this.#properties[Properties.SHIELD_RECOVERY]
   }
 
-  get damage() {
-    return this.#properties[Properties.DAMAGE]
-  }
-
   get reloading() {
     return this.#properties[Properties.RELOADING]
   }
@@ -76,25 +71,30 @@ class Ship {
     if (slotIndex < 0 || this.#weaponSlotsQuantity <= slotIndex) {
       throw new Error(`Invalid weapon slot index: ${slotIndex}`);
     }
-    if (this.#weaponSlots[slotIndex])
-      this.#removeModule(slotIndex, this.#weaponSlots)
-    if (weapon.type !== ModuleType.EMPTY)
-      this.#addModule(slotIndex, weapon, this.#weaponSlots)
+
+    this.#replaceWeapon(slotIndex, weapon)
   }
 
-  appendEquipment(slotIndex, module) {
+  #replaceWeapon(slotIndex, weapon) {
+    if (weapon.type === WeaponType.EMPTY)
+      this.#weaponSlots[slotIndex] = null
+    else
+      this.#weaponSlots[slotIndex] = this.#weaponSlots[slotIndex]
+  }
+
+  appendModule(slotIndex, module) {
     if (slotIndex < 0 || this.#moduleSlotsQuantity <= slotIndex) {
       throw new Error(`Invalid module slot index: ${slotIndex}`);
     }
 
     if (this.#moduleSlots[slotIndex])
-      this.#removeModule(slotIndex, this.#moduleSlots)
+      this.#removeModule(slotIndex)
     if (module.type !== ModuleType.EMPTY)
-      this.#addModule(slotIndex, module, this.#moduleSlots)
+      this.#addModule(slotIndex, module)
   }
 
-  #removeModule(slotIndex, moduleSlots) {
-    const { type: moduleType, properties: moduleProperties } = moduleSlots[slotIndex]
+  #removeModule(slotIndex) {
+    const { type: moduleType, properties: moduleProperties } = this.#moduleSlots[slotIndex]
     for (const propertyKey of Object.keys(moduleProperties)) {
       if (moduleType === ModuleType.SUMMAND) {
         this.#properties[propertyKey] -= moduleProperties[propertyKey]
@@ -102,13 +102,13 @@ class Ship {
       else
         this.#properties[propertyKey] /= moduleProperties[propertyKey]
     }
-    moduleSlots[slotIndex] = null
+    this.#moduleSlots[slotIndex] = null
     this.#health = this.#properties[Properties.HEALTH_MAX]
     this.#shield = this.#properties[Properties.SHIELD_MAX]
   }
 
-  #addModule(slotIndex, module, moduleSlots) {
-    moduleSlots[slotIndex] = module
+  #addModule(slotIndex, module) {
+    this.#moduleSlots[slotIndex] = module
     const { type: moduleType, properties: moduleProperties } = module
     for (const propertyKey of Object.keys(moduleProperties)) {
       if (moduleType === ModuleType.SUMMAND)
