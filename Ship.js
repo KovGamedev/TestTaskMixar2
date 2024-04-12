@@ -127,8 +127,8 @@ class Ship {
 
       const { properties } = weaponSlot
       this.#weaponList.push({
-        timerCurrent: properties[Properties.RELOADING],
-        timerMax: properties[Properties.RELOADING],
+        timerCurrent: this.#properties[Properties.RELOADING] * properties[Properties.RELOADING],
+        timerMax: this.#properties[Properties.RELOADING] * properties[Properties.RELOADING],
         damage: properties[Properties.DAMAGE]
       })
     }
@@ -159,9 +159,9 @@ class Ship {
 
     this.#damage = 0
     for (const weapon of this.#weaponList) {
-      if (--weapon.timerCurrent === 0) {
+      if (--weapon.timerCurrent <= 0) {
         this.#damage += weapon.damage
-        weapon.timerCurrent = weapon.timerMax
+        weapon.timerCurrent = this.#properties[Properties.RELOADING] * weapon.timerMax
       }
     }
   }
