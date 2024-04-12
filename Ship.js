@@ -122,6 +122,9 @@ class Ship {
 
   startBattle() {
     for (const weaponSlot of this.#weaponSlots) {
+      if (!weaponSlot)
+        continue
+
       const { properties } = weaponSlot
       this.#weaponList.push({
         timerCurrent: properties[Properties.RELOADING],
