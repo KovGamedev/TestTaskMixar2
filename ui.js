@@ -29,6 +29,7 @@ function createModule(modules, callback) {
 
   const emptyOption = document.createElement("option")
   emptyOption.innerHTML = `Empty slot`
+  emptyOption.setAttribute("value", JSON.stringify({ type: ModuleType.EMPTY, properties: {} }))
   select.appendChild(emptyOption)
 
   for (const module of modules) {

@@ -73,17 +73,20 @@ class Ship {
 
     if (this.#moduleSlots[slotIndex])
       this.#removeModule(slotIndex)
-    this.#addModule(slotIndex, module)
+    if (module.type !== ModuleType.EMPTY)
+      this.#addModule(slotIndex, module)
   }
 
   #removeModule(slotIndex) {
     const { type: moduleType, properties: moduleProperties } = this.#moduleSlots[slotIndex]
-    for (const propertyKey of Object.keys(module)) {
-      if (moduleType === ModuleType.SUMMAND)
+    for (const propertyKey of Object.keys(moduleProperties)) {
+      if (moduleType === ModuleType.SUMMAND) {
         this.#properties[propertyKey] -= moduleProperties[propertyKey]
+      }
       else
         this.#properties[propertyKey] /= moduleProperties[propertyKey]
     }
+    this.#moduleSlots[slotIndex] = null
     this.#health = this.#properties[Properties.HEALTH_MAX]
     this.#shield = this.#properties[Properties.SHIELD_MAX]
   }

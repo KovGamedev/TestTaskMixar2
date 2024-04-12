@@ -1,4 +1,5 @@
 const ModuleType = Object.freeze({
+  EMPTY: `EMPTY`,
   SUMMAND: `SUMMAND`,
   MULTIPLIER: `MULTIPLIER`
 })
