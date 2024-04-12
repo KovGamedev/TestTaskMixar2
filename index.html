@@ -45,10 +45,15 @@
         if (wasBattleStarted)
           return
 
+        shipA.startBattle()
+        shipB.startBattle()
+
         wasBattleStarted = true
         const battleIntervalId = setInterval(() => {
-          shipA.takeDamage(20)
-          shipB.takeDamage(20)
+          shipA.updatePerSecond()
+          shipB.updatePerSecond()
+          shipA.takeDamage(shipB.damage)
+          shipB.takeDamage(shipA.damage)
           showInfo("shipA", shipA)
           showInfo("shipB", shipB)
           if (shipA.health <= 0 || shipB.health <= 0)

@@ -40,7 +40,7 @@ function displayWeapon({ elementId, ship, weapon }) {
     showInfo(elementId, ship)
   }
 
-  for (let i = 0; i < ship.moduleSlotsQuantity; i++) {
+  for (let i = 0; i < ship.weaponSlothsQuantity; i++) {
     htmlElement.appendChild(createModule(weapon, (event) => {
       callback(event, i)
     }))

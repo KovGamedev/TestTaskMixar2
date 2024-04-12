@@ -11,6 +11,8 @@ class Ship {
   #weaponSlots = []
   #moduleSlotsQuantity
   #moduleSlots = []
+  #damage = 0
+  #weaponList = []
 
   constructor(healthMax, shieldMax, shieldRecovery, weaponSlothsQuantity, moduleSlotsQuantity) {
     this.#properties[Properties.HEALTH_MAX] = healthMax
@@ -20,6 +22,7 @@ class Ship {
     this.#health = healthMax
     this.#shield = shieldMax
     this.#weaponSlotsQuantity = weaponSlothsQuantity
+    this.#weaponSlots = Array(this.#weaponSlotsQuantity).fill(null)
     this.#moduleSlotsQuantity = moduleSlotsQuantity
   }
 
@@ -56,7 +59,7 @@ class Ship {
   }
 
   get weaponSlots() {
-    return this.#weaponSlots
+    return [ ...this.#weaponSlots ]
   }
 
   get moduleSlotsQuantity() {
@@ -64,7 +67,11 @@ class Ship {
   }
 
   get moduleSlots() {
-    return this.#moduleSlots
+    return [ ...this.#moduleSlots ]
+  }
+
+  get damage() {
+    return this.#damage
   }
 
   appendWeapon(slotIndex, weapon) {
@@ -72,14 +79,7 @@ class Ship {
       throw new Error(`Invalid weapon slot index: ${slotIndex}`);
     }
 
-    this.#replaceWeapon(slotIndex, weapon)
-  }
-
-  #replaceWeapon(slotIndex, weapon) {
-    if (weapon.type === WeaponType.EMPTY)
-      this.#weaponSlots[slotIndex] = null
-    else
-      this.#weaponSlots[slotIndex] = this.#weaponSlots[slotIndex]
+    this.#weaponSlots[slotIndex] = weapon.type === WeaponType.EMPTY ? null : weapon
   }
 
   appendModule(slotIndex, module) {
@@ -120,6 +120,17 @@ class Ship {
     this.#shield = this.#properties[Properties.SHIELD_MAX]
   }
 
+  startBattle() {
+    for (const weaponSlot of this.#weaponSlots) {
+      const { properties } = weaponSlot
+      this.#weaponList.push({
+        timerCurrent: properties[Properties.RELOADING],
+        timerMax: properties[Properties.RELOADING],
+        damage: properties[Properties.DAMAGE]
+      })
+    }
+  }
+
   takeDamage(damage) {
     if (damage < this.#shield) {
       this.#shield -= damage
@@ -141,6 +152,14 @@ class Ship {
       this.#shield += this.shieldRecovery
       if (this.shieldMax < this.#shield)
         this.#shield = this.shieldMax
+    }
+
+    this.#damage = 0
+    for (const weapon of this.#weaponList) {
+      if (--weapon.timerCurrent === 0) {
+        this.#damage += weapon.damage
+        weapon.timerCurrent = weapon.timerMax
+      }
     }
   }
 }
